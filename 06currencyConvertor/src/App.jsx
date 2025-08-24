@@ -5,12 +5,11 @@ import useCurrencyInfo from './useCurrencyinfo.js'
 
 function App() {
   const [amount, setAmount] = useState(0)
-  const [from, setFrom] = useState("usd")
-  const [to, setTo] = useState("inr")
+  const [from, setFrom] = useState("USD")
+  const [to, setTo] = useState("INR")
   const [convertAmount, setConvertAmount] = useState(0)
 
-  //   using hook here
-  const currencyInfo = useCurrencyInfo(from)    ///   passing the value from => "form"   bcoz jo currency se convert karna hai wahi denge
+  const {data: currencyInfo, error} = useCurrencyInfo(from)
 
   const options = Object.keys(currencyInfo)
 
@@ -21,16 +20,20 @@ function App() {
     setAmount(convertAmount)
     setConvertAmount(amount)
   }
+
   const convert = () => {
-    //    converting value, here * means finding the correct currency(like which is given in "to")
-    setConvertAmount(amount*currencyInfo[to])
+    setConvertAmount(amount * currencyInfo[to])
+  }
+
+  if (error) {
+    return <div className="w-full h-screen flex flex-wrap justify-center items-center bg-cover bg-no-repeat" style={{backgroundImage: `url('https://images.pexels.com/photos/6266283/pexels-photo-6266283.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')`}}><div className="w-full max-w-md mx-auto border border-gray-60 rounded-lg p-5 backdrop-blur-sm bg-white/30">Error: {error}</div></div>
   }
 
   return (
     <div
         className="w-full h-screen flex flex-wrap justify-center items-center bg-cover bg-no-repeat"
         style={{
-            backgroundImage: `url('https://images.pexels.com/photos/3532540/pexels-photo-3532540.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')`,
+            backgroundImage: `url('https://images.pexels.com/photos/6266283/pexels-photo-6266283.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')`,
         }}
     >
         <div className="w-full">
@@ -49,7 +52,7 @@ function App() {
                             label="From"
                             amount={amount}
                             currencyOptions={options}
-                            onCurrencyChange={(currency) => setAmount(amount)}
+                            onCurrencyChange={(currency) => setFrom(currency)}
                             selectCurrency={from}
                             onAmountChange={(amount) => setAmount(amount)}
 

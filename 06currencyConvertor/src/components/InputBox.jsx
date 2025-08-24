@@ -1,12 +1,13 @@
 import React, {useId} from 'react'
 
 function InputBox({
+    type,
     label,
     amount,
     onAmountChange,
     onCurrencyChange,
     currencyOptions =[],   //    like inr , usd 
-    selectCurrency = "usd",   //   default currency
+    selectCurrency = "USD",   //   default currency
     amountDisabled = false,
     currencyDisabled = false,
     

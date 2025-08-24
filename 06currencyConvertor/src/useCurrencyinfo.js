@@ -1,21 +1,25 @@
 import {useEffect, useState} from 'react';
- 
 
+function useCurrencyInfo(currency) {
+    const [data, setData] = useState({})
+    const [error, setError] = useState(null)
 
-///     designing of  CUSTOM  HOOK
-
-function useCurrencyInfo(currency) {            // "use" is attach in front of the user-defined hook is a standard practice and it is not necessary
-    const [data, setData] = useState({})        //   if no value is coming it will store null
     useEffect( () => {
-        fetch(`https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/${currency}.json`)
-        
-        .then((res) => res.json())            //   converting the response to json.  can also done by JSON.parse
-        .then((res) =>  setData(res [currency]))         // can also access an object using "[]"
-        console.log(data);
-    }, [currency])                               //  it is dependency array, becoz every currency is changed, we need a Callback
-    console.log(data);
-    // return [data, setData]    //   in this sitiuation this method is wrong,  unable to call function
-    return data
+        fetch(`https://v6.exchangerate-api.com/v6/${import.meta.env.VITE_EXCHANGE_RATES_API_KEY}/latest/${currency}`)
+        .then((res) => res.json())
+        .then((res) => {
+            if (res.result === 'error') {
+                setError(res['error-type']);
+            } else {
+                setData(res.conversion_rates)
+            }
+        })
+        .catch(() => {
+            setError("An error occurred while fetching data.")
+        })
+    }, [currency])
+
+    return {data, error}
 }
 export default useCurrencyInfo;
 
